@@ -4,14 +4,22 @@
   ATTINY will detect when transmitting. But BOTH Serials will still recieve. The first to have
   begin() called will still receive. The other that is not the last to have begin() or listen() used
   will not respond to any input.
+  ATTiny25/45/85 Pin map with CE_PIN 3 and CSN_PIN 4          
+ *                         +-\/-+                             
+ *       PB5  1|o   |8  Vcc ---   
+ *   --- PB3  2|    |7  PB2 ---      
+ *   --- PB4  3|    |6  PB1 ---  
+ *   --- GND  4|    |5  PB0 ---  
+ *                         +----+
 */
+
 #include <SoftwareSerial.h>
 #define RX1    PB3   // Physical Pin 2
 #define TX1    PB4   // Pin 3
-#define RX2    PB0   // Physical Pin 2
-#define TX2    PB1   // Pin 3
+#define RX2    PB0   // Physical Pin 5
+#define TX2    PB1   // Pin 6
 SoftwareSerial mySerial1(RX1, TX1);  // Pins 2 and 3 in the order of RX TX
-SoftwareSerial mySerial2(RX2, TX2);  // Pins 2 and 3 in the order of RX TX
+SoftwareSerial mySerial2(RX2, TX2);  // Pins 5 and 6 in the order of RX TX
 void setup() {
   pinMode(PB2, OUTPUT);
   mySerial1.begin(9600);    // Not entirely needed
@@ -32,6 +40,7 @@ void loop() {
       mySerial2.flush();
       mySerial2.listen();
     }  // if
+  // If there is anything needing to be done with the incoming data before sending it out, here is the place to do it. 
     if(mySerial2.available() > 0) {  
       mySerial2.readBytes(b, mySerial2.available());
       digitalWrite(PB2, LOW );
